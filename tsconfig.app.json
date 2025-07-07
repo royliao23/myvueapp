@@ -12,4 +12,5 @@
     "noUncheckedSideEffectImports": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+  // If you have a placeholder like 'src/pages/{PageName}.vue', remove it from the include array.
 }
