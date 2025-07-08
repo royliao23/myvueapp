@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import { useAuthStore } from '../stores/auth'
 import { Eye, EyeOff } from 'lucide-vue-next'
 import axios from 'axios'
 
@@ -76,7 +76,7 @@ const error = ref<string | null>(null)
 const isLoading = ref(false)
 const showPassword = ref(false)
 const router = useRouter()
-const store = useStore()
+const store = useAuthStore()
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
@@ -108,7 +108,11 @@ const handleLogin = async () => {
     localStorage.setItem('id', response.data.user.id)
 
     props.onLoginSuccess?.(username.value)
-    store.commit('loggedin', true)
+    store.login({
+      username: username.value,
+      email: response.data.user.email,
+      id: response.data.user.id
+    })
     router.push('/home')
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Invalid login credentials.'

@@ -1,10 +1,19 @@
 // src/main.ts
 import 'vuetify/styles'
 import { createApp } from 'vue'
+import { createPinia } from 'pinia' // Import Pinia
 import App from './App.vue'
-import vuetify from './plugins/vuetify' // Import from plugins
+import vuetify from './plugins/vuetify'
 import '@mdi/font/css/materialdesignicons.css'
 
+// Create app instance
 const app = createApp(App)
-app.use(vuetify) // Use the imported Vuetify instance
+
+// Create Pinia instance
+const pinia = createPinia()
+
+// Use plugins
+app.use(vuetify) // Vuetify
+app.use(pinia)   // Pinia (order doesn't matter)
+
 app.mount('#app')
