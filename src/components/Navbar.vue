@@ -143,7 +143,7 @@ const handleItemClick = (item: NavItem) => {
 }
 
 .v-navigation-drawer .v-list-item:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: white !important;
 }
 
 .v-navigation-drawer .v-icon {
