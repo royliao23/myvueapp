@@ -89,8 +89,8 @@ const currentPageComponent = computed<PageComponent>(() => {
     //   return defineAsyncComponent(() => import('./pages/Contractor.vue'));
     // case 'Category':
     //   return defineAsyncComponent(() => import('./pages/Category.vue'));
-    // case 'ProjectComp': // Renamed to avoid conflict with 'Project' folder
-    //   return defineAsyncComponent(() => import('./pages/Project.vue'));
+    case 'ProjectComp': // Renamed to avoid conflict with 'Project' folder
+      return defineAsyncComponent(() => import('./pages/Project.vue'));
     // case 'JobComp': // Renamed to avoid conflict with 'Job' folder
     //   return defineAsyncComponent(() => import('./pages/Job.vue'));
     case 'PurchaseComp': // Renamed to avoid conflict with 'Purchase' folder
