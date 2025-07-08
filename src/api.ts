@@ -1,5 +1,6 @@
 // src/api/index.ts
-import axios from 'axios'
+// import axios from 'axios'
+import authAxios from './authAxios'
 import type {
   Todo,
   Article,
@@ -26,13 +27,13 @@ if (!API_BASE_URL) {
 }
 
 // Create axios instance with auth token
-const authAxios = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('authToken')}`
-  }
-})
+// const authAxios = axios.create({
+//   baseURL: API_BASE_URL,
+//   headers: {
+//     'Content-Type': 'application/json',
+//     Authorization: `Bearer ${localStorage.getItem('authToken')}`
+//   }
+// })
 
 // Helper function for delete responses
 const handleDeleteResponse = async (action: string, response: any) => {
