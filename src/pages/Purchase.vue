@@ -15,7 +15,7 @@ import {
   fetchContractors as fetchContractorsApi, createContractor as createContractorApi,
   createInvoice as createInvoiceApi, fetchPoandInv
 } from '../api';
-
+import { useNavigationService } from '../composables/useNavigationService';
 // --- Styled Components Replacements (CSS variables or direct CSS) ---
 // For brevity, these are integrated directly into the <style scoped> block below.
 // In a larger app, you might use a CSS framework or separate CSS files.
@@ -32,12 +32,14 @@ const navigateTo = (path: string, params: any = {}) => {
     alert(`Viewing Invoice: ${JSON.stringify(params.invoice.code)}`);
   }
 };
-const useNavigationService = () => ({
-  handleViewPurchase: (purchase: Purchase) => navigateTo('view-purchase', { purchase }),
-  handleViewInvoice: (invoice: InvoiceShort) => navigateTo('view-invoice', { invoice }),
-});
+// const useNavigationServices = () => ({
+//   handleViewPurchase: (purchase: Purchase) => navigateTo('view-purchase', { purchase }),
+//   handleViewInvoice: (invoice: InvoiceShort) => navigateTo('view-invoice', { invoice }),
+// });
 const { handleViewPurchase, handleViewInvoice } = useNavigationService();
-
+const viewPurchaseDetail = (purchase: Purchase) => {
+  handleViewPurchase(purchase);
+};
 // --- Reactive State ---
 const purchases = ref<Purchase[]>([]);
 const originalCost = ref<number>(0);
@@ -495,7 +497,7 @@ const handleCreateInvoice = async (balance: number) => {
 
     <ul v-if="isMobileView" class="list">
       <li v-for="purchase in paginatedPurchases" :key="purchase.code" class="list-item">
-        <button @click="handleViewPurchase(purchase)" class="text-blue-500 underline">
+        <button @click="viewPurchaseDetail(purchase)" class="text-blue-500 underline">
           PO#: {{ purchase.code }}
         </button><br />
         <strong>Contact Person:</strong> {{ purchase.contact }} <br />
@@ -506,7 +508,7 @@ const handleCreateInvoice = async (balance: number) => {
         <strong>Invoices:</strong>
         <span v-for="(inv, index) in purchase.invoice" :key="index"
               class="invoice-list-item text-blue-500"
-              @click="handleViewInvoice(inv)">
+              >
           Inv#{{ inv.code }}: ${{ inv.cost || 0 }}
         </span>
         <p>
@@ -534,7 +536,7 @@ const handleCreateInvoice = async (balance: number) => {
       <tbody>
         <tr v-for="purchase in paginatedPurchases" :key="purchase.code">
           <td class="td">
-            <button @click="handleViewPurchase(purchase)" class="text-blue-500">
+            <button @click="viewPurchaseDetail(purchase)" class="text-blue-500">
               {{ purchase.code }}
             </button>
           </td>
@@ -547,7 +549,7 @@ const handleCreateInvoice = async (balance: number) => {
           <td class="td text-blue-500">
             <span v-for="(inv, index) in purchase.invoice" :key="index"
                   class="invoice-list-item"
-                  @click="handleViewInvoice(inv)">
+                  >
               Inv#{{ inv.code }}: ${{ inv.cost || 0 }}
             </span>
           </td>
