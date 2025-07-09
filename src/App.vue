@@ -85,8 +85,8 @@ const currentPageComponent = computed<PageComponent>(() => {
     //   return defineAsyncComponent(() => import('./pages/ForgotPassword.vue'));
     // case 'ResetPassword':
     //   return defineAsyncComponent(() => import('./pages/ResetPassword.vue'));
-    // case 'Contractor':
-    //   return defineAsyncComponent(() => import('./pages/Contractor.vue'));
+    case 'Contractor':
+      return defineAsyncComponent(() => import('./pages/Contractor.vue'));
     case 'Category':
       return defineAsyncComponent(() => import('./pages/Category.vue'));
     case 'ProjectComp': // Renamed to avoid conflict with 'Project' folder
