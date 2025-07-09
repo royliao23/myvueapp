@@ -132,6 +132,7 @@ const fetchProjectsData = async () => {
   try {
     const data = await fetchProjects()
     projects.value = data || []
+    console.log("Projects fetched successfully:", projects.value)
   } catch (error) {
     console.error("Error fetching projects:", error)
   }

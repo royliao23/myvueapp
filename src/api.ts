@@ -20,6 +20,7 @@ import type {
   Company,
   InvoiceFilter
 } from '@/models'
+import { getValidAccessToken } from './authService'
 
 const API_BASE_URL = import.meta.env.VITE_API_NODE
 if (!API_BASE_URL) {
@@ -45,10 +46,97 @@ const handleDeleteResponse = async (action: string, response: any) => {
   }
 }
 
-// Project API
+
 export const fetchProjects = async (): Promise<Project[]> => {
+  try {
   const response = await authAxios.get('/high/projects')
+  // if (!response.data || !Array.isArray(response.data.projects)) {
+  //   throw new Error('Invalid response format for projects')
+  // }
+  console.log('Projects fetched:', response)
   return response.data.projects || response.data
+} catch (error) {
+    alert('Error fetching projects')
+    console.error('Error fetching projects:', error)
+    throw error // Re-throw to allow error handling in calling code
+  }
+}
+export const fetchProjectsfetch = async (): Promise<Project[]> => {
+  try {
+    const token = await getValidAccessToken()
+    if (!token) {
+      throw new Error('No authentication token available')
+    }
+
+    const response = await fetch(`${import.meta.env.VITE_API_NODE}/high/projects`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+ 
+    const data = await response.json()
+   
+    return data.projects || data
+  } catch (error) {
+    console.error('Error fetching projects:', error)
+    throw error // Re-throw to allow error handling in calling code
+  }
+}
+
+export const fetchProjectsbasic = async (): Promise<Project[]> => {
+  try {
+    alert('Fetching projects using basic auth')
+    
+    // Create basic auth token
+    const username = 'testuser3' // Replace with your actual username
+    const password = 'TestPass1.' // Replace with your actual password
+    const basicAuthToken = btoa(`${username}:${password}`)
+    console.log('Basic Auth Token:', basicAuthToken)
+    
+    const response = await fetch(`${API_BASE_URL}/high/projects`, {
+      headers: {
+        'Authorization': `Basic ${basicAuthToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      alert('Received error response from server')
+      throw new Error(`Error fetching projects: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (!data) {
+      alert('Received empty response from server');
+      throw new Error('Empty response received');
+    }
+
+    // Handle both response formats
+    const projects = Array.isArray(data)
+      ? data
+      : data.projects;
+
+    if (!Array.isArray(projects)) {
+      alert('Invalid projects data format');
+      throw new Error('Invalid projects data format');
+    }
+
+    console.log('Projects fetched successfully:', projects);
+    alert('Projects fetched successfully');
+
+    return projects;
+  } catch (error) {
+    console.error('Error fetching projects:', error)
+    alert(`Error fetching projects: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    throw error
+  }
 }
 
 export const createProject = async (projectData: Omit<Project, 'id'>): Promise<Project> => {
