@@ -26,7 +26,7 @@ const navigateTo = (path: string, params: any = {}) => {
   console.log(`Navigating to: ${path} with params:`, params);
   // Example: router.push({ name: path, params: params });
   // For now, we'll just log and potentially stringify for URL
-  if (path === 'view-purchase' && params.purchase) {
+  if (path === 'PurchaseView' && params.purchase) {
     alert(`Viewing Purchase: ${JSON.stringify(params.purchase.code)}`);
   } else if (path === 'view-invoice' && params.invoice) {
     alert(`Viewing Invoice: ${JSON.stringify(params.invoice.code)}`);
@@ -36,9 +36,10 @@ const navigateTo = (path: string, params: any = {}) => {
 //   handleViewPurchase: (purchase: Purchase) => navigateTo('view-purchase', { purchase }),
 //   handleViewInvoice: (invoice: InvoiceShort) => navigateTo('view-invoice', { invoice }),
 // });
-const { handleViewPurchase, handleViewInvoice } = useNavigationService();
+const { handleViewPurchase} = useNavigationService();
 const viewPurchaseDetail = (purchase: Purchase) => {
   handleViewPurchase(purchase);
+  // navigateTo('PurchaseView', purchase.code.toString());
 };
 // --- Reactive State ---
 const purchases = ref<Purchase[]>([]);
@@ -621,19 +622,18 @@ const handleCreateInvoice = async (balance: number) => {
             <span @click="handleJobOpenModal" class="add-modal-icon"> +</span>
           </div>
 
-          <div>
-            <label htmlFor="cost">Cost</label>
-            <input
-              id="cost"
-              type="number"
-              name="cost"
-              v-model.number="formData.cost"
-              placeholder="Cost"
-              autocomplete="off"
-              required
-              class="input"
-            />
-          </div>
+          <input
+            id="cost"
+            type="number"
+            name="cost"
+            v-model.number="formData.cost"
+            placeholder="Cost"
+            autocomplete="off"
+            required
+            step="0.01"
+            class="input"
+          />
+
 
           <div>
             <label htmlFor="ref">Reference</label>

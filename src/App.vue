@@ -23,14 +23,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import Navbar from './components/Navbar.vue';
+import { useCurrentPage, useCurrentRouteParam } from './composables/useGlobalState';
 
+const currentPage = useCurrentPage();
+const currentRouteParam = useCurrentRouteParam();
 // Define the type for page components for better type safety
 type PageComponent = ReturnType<typeof defineAsyncComponent> | null;
 
 // Reactive state for authentication and current page
 const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true');
-const currentPage = ref('Login'); // Default to Login page
-const currentRouteParam = ref<string | null>(null); // For dynamic route parameters
 
 // List of pages that should hide the navigation bar
 const hideNavPages = ['Login', 'Signup', 'ForgotPassword', 'ResetPassword', 'EasterEvent'];
@@ -68,6 +69,8 @@ const navigateTo = (page: string, param?: string) => {
 
 // Dynamic component loading based on currentPage
 const currentPageComponent = computed<PageComponent>(() => {
+  // if (currentPage.value === 'PurchaseView') return PurchaseView;
+  
   switch (currentPage.value) {
     // case 'Home':
     case 'Home':
@@ -95,9 +98,10 @@ const currentPageComponent = computed<PageComponent>(() => {
       return defineAsyncComponent(() => import('./pages/Job.vue'));
     case 'PurchaseComp': // Renamed to avoid conflict with 'Purchase' folder
       return defineAsyncComponent(() => import('./pages/Purchase.vue'));
-    case 'PurchaseView/{code}': // Dynamic route for PurchaseView
+    case 'PurchaseView': // Dynamic route for PurchaseView
       return defineAsyncComponent(() => import('./pages/PurchaseView.vue'));
-    
+    case 'PurchaseV1': // Dynamic route for PurchaseV1
+      return defineAsyncComponent(() => import('./pages/PurchaseV1.vue'));
     // case 'InvoiceComp': // Renamed to avoid conflict with 'Invoice' folder
     //   return defineAsyncComponent(() => import('./pages/Invoice.vue'));
     // case 'InvoiceView':

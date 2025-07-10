@@ -104,7 +104,8 @@ const mainItems = ref<NavItem[]>([
   { title: 'Invoice', icon: 'mdi-receipt', route: 'InvoiceComp' },
   { title: 'Pay', icon: 'mdi-cash-multiple', route: 'PayComp' },
   { title: 'Budget', icon: 'mdi-wallet', route: 'Budget' },
-  { title: 'Sample Purchase View', icon: 'mdi-eye', route: 'PurchaseView', param: '123' }
+  { title: 'Sample Purchase View', icon: 'mdi-eye', route: 'PurchaseView', param: '1' },
+  { title: 'P1', icon: 'mdi-eye', route: 'PurchaseV1', param: '1' }
 ]);
 
 // HR Submenu items

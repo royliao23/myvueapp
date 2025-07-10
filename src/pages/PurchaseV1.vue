@@ -1,9 +1,29 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import emailjs from '@emailjs/browser';
 import { fetchJobDetails, fetchContractorDetails, fetchProjectDetails } from '../services/DetailService'; // Assuming these services are framework-agnostic JS functions
-import { useSelectedPurchase } from '../composables/useGlobalState';
-import { useCurrentPage } from '../composables/useGlobalState';
+
+// --- Interfaces (can be moved to a separate types.ts file if preferred) ---
+interface InvoiceShort {
+  code: number;
+  ref?: string;
+  cost?: number;
+}
+
+interface Purchase {
+  code: number;
+  job_id: number;
+  by_id: number;
+  project_id: number;
+  cost: number;
+  ref: string;
+  contact: string;
+  create_at: Date;
+  updated_at: Date;
+  due_at: Date;
+  invoice?: InvoiceShort[];
+}
 
 interface Project {
   code: number;
@@ -32,12 +52,6 @@ interface Contractor {
   address: string;
 }
 
-const currentPage = useCurrentPage();
-
-const handleBack = () => {
-  currentPage.value = 'PurchaseComp'; // or whatever your main view is called
-};
-
 // --- Environment Variables (using Vite's import.meta.env) ---
 const emailJsKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const emailJsServiceId = import.meta.env.VITE_SERVICE_ID;
@@ -47,8 +61,35 @@ if (!emailJsKey || !emailJsServiceId || !emailJsTemplateId) {
   throw new Error("Missing environment variables. Check .env or .env.local configuration.");
 }
 
+// --- Router Instance ---
+const router = useRouter();
 
-const purchase = useSelectedPurchase();
+// --- Accessing Purchase Data from History State ---
+// This directly mirrors React Router's useLocation().state
+const props = defineProps<{ code: string }>();
+const purchase = ref<Purchase | null>(
+    {
+        "code": 1,
+        "job_id": 1,
+        "by_id": 1,
+        "project_id": 1,
+        "ref": "refridge",
+        "cost": 2100.0,
+        "create_at": new Date("2025-07-05"),
+        "updated_at": new Date("2025-07-05"),
+        "contact": "Lee",
+        "due_at": new Date("2025-07-05"),
+      
+    
+        "invoice": [
+            {
+                "code": 1,
+                "ref": "refridge",
+                "cost": 2100.0
+            }
+        ],
+    } as Purchase
+) || null;  
 
 // --- Reactive State ---
 const jobDetails = ref<Job>({
@@ -126,8 +167,6 @@ const fetchAllDetails = async () => {
     console.error("No purchase data to fetch details for.");
     return;
   }
-  const projectData = await fetchProjectDetails(purchase.value.project_id);
-  if (projectData) projectDetails.value = projectData;
 
   const jobData = await fetchJobDetails(purchase.value.job_id);
   if (jobData) jobDetails.value = jobData;
@@ -135,7 +174,8 @@ const fetchAllDetails = async () => {
   const contractorData = await fetchContractorDetails(purchase.value.by_id);
   if (contractorData) contractorDetails.value = contractorData;
 
-  
+  const projectData = await fetchProjectDetails(purchase.value.project_id);
+  if (projectData) projectDetails.value = projectData;
 };
 
 // --- Lifecycle Hook ---
@@ -149,7 +189,6 @@ const dueDateFormatted = computed(() => formatDate(purchase.value?.due_at));
 const gstAmount = computed(() => (purchase.value && purchase.value.cost / 11) ? (purchase.value.cost / 11).toFixed(2) : '0.00');
 const totalCost = computed(() => purchase.value?.cost ? purchase.value.cost.toFixed(2) : '0.00');
 </script>
-
 <template>
   <div class="purchase-view-container">
     <h1 class="purchase-view-title">PURCHASE ORDER</h1>
@@ -214,7 +253,7 @@ const totalCost = computed(() => purchase.value?.cost ? purchase.value.cost.toFi
       <div class="print-hide-box">
         <button class="button-contained" @click="handlePrint">Print</button>
         <button class="button-contained" @click="handleEmail">Email</button>
-        <button class="button-contained" @click="handleBack">Back</button>
+        <button class="button-contained" @click="router.go(-1)">Back</button>
       </div>
     </div>
   </div>
@@ -375,3 +414,4 @@ th {
   }
 }
 </style>
+
