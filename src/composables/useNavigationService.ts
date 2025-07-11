@@ -15,6 +15,7 @@ export function useNavigationService() {
     currentPage.value = 'PurchaseView';                 // switch component
     console.log('Current page after navigation:', currentPage.value);
     selectedPurchase.value = purchase; // store selected purchase
+    console.log('Selected purchase set:', selectedPurchase.value);
   };
 
   return { handleViewPurchase };

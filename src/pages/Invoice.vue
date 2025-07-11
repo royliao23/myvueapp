@@ -46,7 +46,7 @@
           <strong>Price:</strong> {{ invoice.cost || 0 }} <br />
           <strong>Job:</strong> {{ getJobLabel(invoice.job_id) }} <br />
           <strong>PO:</strong> 
-          <span class="text-blue-500" @click="handleViewPurchase(invoice.po_id)">
+          <span class="text-blue-500" @click="handleViewPO(invoice.po_id)">
             {{ invoice.po_id }}
           </span> <br />
           <strong>Paid:</strong>
@@ -98,7 +98,7 @@
           <td>{{ getContractorLabel(invoice.by_id) }}</td>
           <td>{{ invoice.ref }}</td>
           <td>
-            <span class="text-blue-500" @click="handleViewPurchase(invoice.po_id)">
+            <span class="text-blue-500" @click="handleViewPO(invoice.po_id)">
               {{ invoice.po_id }}
             </span>
           </td>
@@ -407,6 +407,7 @@ import JobModal from '../components/JobModal.vue';
 import { createInvoice, updateInvoice, deleteInvoice, fetchInvoice, fetchInNPay, fetchCategories as fc, createCategory as ccateg, fetchJobs as fj, createJob as cj, fetchProjects as fp, fetchContractors as ft, createContractor as cc } from "../api";
 import { fetchPurchaseDetails, fetchPayDetails } from "../services/DetailService";
 import { useCurrentPage, useCurrentRouteParam } from '../composables/useGlobalState';
+import { useNavigationService } from '../composables/useNavigationService';
 
 export default {
   components: {
@@ -823,10 +824,18 @@ export default {
       const job = jobOptions.value.find(option => option.value === id);
       return job ? job.label : "Unknown";
     };
-
-    const handleViewPurchase = async (poId) => {
+    const { handleViewPurchase } = useNavigationService();
+    const handleViewPO = async (poId) => {
       try {
         const purchase = await fetchPurchaseDetails(poId || 0);
+   
+        console.log("Purchase details in invoice page:", purchase);
+        if (!purchase) {
+          console.error(`Purchase record not found for PO code: ${poId}`);
+          return;
+        } else if (typeof purchase.cost === "string") {
+          purchase.cost = parseFloat(purchase.cost);
+        }
         handleViewPurchase(purchase);
       } catch (error) {
         console.error("Error fetching purchase details:", error);
@@ -915,7 +924,7 @@ export default {
       getProjectLabel,
       getContractorLabel,
       getJobLabel,
-      handleViewPurchase,
+      handleViewPO,
       handleViewPay,
     };
   },

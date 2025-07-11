@@ -48,7 +48,14 @@ if (!emailJsKey || !emailJsServiceId || !emailJsTemplateId) {
 }
 
 
-const purchase = useSelectedPurchase();
+// const purchase = useSelectedPurchase();
+const selectedPurchase = useSelectedPurchase();
+
+const purchase = computed(() => selectedPurchase.value);
+
+if (!purchase.value) {
+  console.warn('No selected purchase found!');
+}
 
 // --- Reactive State ---
 const jobDetails = ref<Job>({
