@@ -1,12 +1,14 @@
 // src/composables/useNavigationService.ts
 
 import type { Purchase, Invoice, Pay } from '../models'; // Adjust path based on your project structure
-import { useCurrentPage, useCurrentRouteParam, useSelectedPurchase } from './useGlobalState';
+import { useCurrentPage, useCurrentRouteParam, useSelectedPurchase, useSelectedInvoice, useSelectedPay } from './useGlobalState';
 
 export function useNavigationService() {
   const currentPage = useCurrentPage(); // or import directly
   const currentRouteParam = useCurrentRouteParam(); // if you’re tracking that separately
   const selectedPurchase = useSelectedPurchase();
+  const selectedInvoice = useSelectedInvoice();
+  const selectedPay = useSelectedPay();
 
   const handleViewPurchase = (purchase: Purchase) => {
     currentRouteParam.value = purchase.code.toString(); // store route param
@@ -17,6 +19,37 @@ export function useNavigationService() {
     selectedPurchase.value = purchase; // store selected purchase
     console.log('Selected purchase set:', selectedPurchase.value);
   };
+  const handleViewInvoice = (invoice: Invoice) => {
+    try {
+      selectedInvoice.value = invoice; // store selected invoice
+      console.log('Selected invoice set:', selectedInvoice.value);
+      console.log('Navigating to InvoiceView with code:', invoice.code);
+      currentRouteParam.value = invoice.code.toString();
+      currentPage.value = 'InvoiceView';
+      
+    } catch (error) {
+      console.error('Navigation error:', error);
+      currentPage.value = 'Home';
+    }
+  };
 
-  return { handleViewPurchase };
+  const handleViewPay = (pay: Pay) => {
+    try {
+      selectedPay.value = pay; // store selected pay
+      console.log('Selected pay set:', selectedPay.value);
+      console.log('Navigating to PayView with code:', pay.code);
+      currentRouteParam.value = pay.code.toString();
+      currentPage.value = 'PayView';
+      
+    } catch (error) {
+      console.error('Navigation error:', error);
+      currentPage.value = 'Home';
+    }
+  };
+
+  return { 
+    handleViewPurchase,
+    handleViewInvoice,
+    handleViewPay
+  };
 }

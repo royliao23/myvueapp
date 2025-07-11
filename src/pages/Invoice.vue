@@ -37,7 +37,7 @@
     <div v-if="isMobileView">
       <ul class="list">
         <li v-for="invoice in paginatedInvoices" :key="invoice.code" class="list-item">
-          <button @click="handleViewInvoice(invoice)" class="text-blue-500">
+          <button @click="handleViewInv(invoice)" class="text-blue-500">
             Inv#:{{ invoice.code }}
           </button><br />
           <strong>Contact Person:</strong> {{ invoice.contact }} <br />
@@ -87,7 +87,7 @@
       <tbody>
         <tr v-for="invoice in paginatedInvoices" :key="invoice.code">
           <td>
-            <button @click="handleViewInvoice(invoice)" class="text-blue-500">
+            <button @click="handleViewInv(invoice)" class="text-blue-500">
               {{ invoice.code }}
             </button>
           </td>
@@ -842,6 +842,20 @@ export default {
       }
     };
 
+    const { handleViewInvoice } = useNavigationService();
+    const handleViewInv = async (invoice) => {
+      try {
+        if (!invoice) {
+          console.error(`Invoice record not found for ID: ${invoice.code}`);
+          return;
+        }
+        handleViewInvoice(invoice);
+      } catch (error) {
+        console.error("Error fetching invoice details:", error);
+      }
+    };
+
+
     const handleViewPay = async (payId) => {
       try {
         const pay = await fetchPayDetails(payId);
@@ -926,6 +940,7 @@ export default {
       getJobLabel,
       handleViewPO,
       handleViewPay,
+      handleViewInv,
     };
   },
 };

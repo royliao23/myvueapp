@@ -48,7 +48,6 @@ if (!emailJsKey || !emailJsServiceId || !emailJsTemplateId) {
 }
 
 
-// const purchase = useSelectedPurchase();
 const selectedPurchase = useSelectedPurchase();
 
 const purchase = computed(() => selectedPurchase.value);
