@@ -54,7 +54,7 @@
             <span v-for="p in invoice.pay" :key="p.code" class="invoiceList">
               {{ p.amount ? '$' + Number(p.amount)?.toFixed(2) : 0 }}
               <button
-                @click="handleViewPay(p.code)"
+                @click="handleViewP(p.code)"
                 class="text-blue-500 cursor-pointer"
               >
                 {{ p.code ? 'pay#' + p.code : '' }}
@@ -107,7 +107,7 @@
               <span v-for="p in invoice.pay" :key="p.code" class="invoiceList">
                 ${{ p.amount || 0 }}
                 <button 
-                  @click="handleViewPay(p.code)"
+                  @click="handleViewP(p.code)"
                   class="text-blue-500 cursor-pointer"
                 >
                   {{ p.code }}
@@ -824,7 +824,7 @@ export default {
       const job = jobOptions.value.find(option => option.value === id);
       return job ? job.label : "Unknown";
     };
-    const { handleViewPurchase } = useNavigationService();
+    const { handleViewPurchase, handleViewInvoice, handleViewPay } = useNavigationService();
     const handleViewPO = async (poId) => {
       try {
         const purchase = await fetchPurchaseDetails(poId || 0);
@@ -842,7 +842,6 @@ export default {
       }
     };
 
-    const { handleViewInvoice } = useNavigationService();
     const handleViewInv = async (invoice) => {
       try {
         if (!invoice) {
@@ -857,7 +856,7 @@ export default {
     };
 
 
-    const handleViewPay = async (payId) => {
+    const handleViewP = async (payId) => {
       try {
         const pay = await fetchPayDetails(payId);
         if (pay) {
@@ -940,7 +939,7 @@ export default {
       getContractorLabel,
       getJobLabel,
       handleViewPO,
-      handleViewPay,
+      handleViewP,
       handleViewInv,
     };
   },

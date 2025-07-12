@@ -5,7 +5,8 @@ const currentPage = ref('Home');
 const currentRouteParam = ref<string | null>(null);
 const selectedPurchase = ref<Purchase | null>(null);  
 const selectedInvoice = ref<Invoice | null>(null); // For invoice selection if needed
-const selectedPay = ref<Pay | null>(null); // For pay selection if needed
+const selectedPay = ref<any | null>(null); // For pay selection if needed
+
 
 export function useCurrentPage() {
   return currentPage;

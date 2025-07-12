@@ -107,7 +107,7 @@ import {
   fetchContractorDetails,
   fetchProjectDetails
 } from '../services/DetailService';
-import { useSelectedPay,useCurrentPage } from '../composables/useGlobalState';
+import {  useSelectedPay, useCurrentPage } from '../composables/useGlobalState';
 // Router
 // const route = useRoute();
 // const router = useRouter();
@@ -202,9 +202,10 @@ const goBack = () => {
 // Fetch data
 const fetchData = async () => {
   try {
+
     await Promise.all([
       fetchJobDetails(pay.value?.jobby?.job_id || 0).then(data => jobDetails.value = data),
-      fetchContractorDetails(pay.value?.jobby?.by_id?.code || 0).then(data => contractorDetails.value = data),
+      fetchContractorDetails(pay.value?.jobby?.by_id?.code || pay.value?.jobby?.by_id || 0).then(data => contractorDetails.value = data),
       fetchProjectDetails(pay.value?.jobby?.project_id || 0).then(data => projectDetails.value = data)
     ]);
   } catch (error) {
