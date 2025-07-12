@@ -147,7 +147,7 @@ const projectDetails = ref<Project>({
   status: "",
 });
 
-const contractorDetails = ref<any>({
+const contractorDetails = ref<Contractor>({
   code: 0,
   contact_person: "",
   company_name: "",
@@ -159,8 +159,7 @@ const contractorDetails = ref<any>({
   address: "",
   abn: "",
   gst_registered: false,
-}
-);
+});
 
 const companyInfo = ref([
   'Green Real Pty Ltd',
@@ -196,7 +195,7 @@ const fetchInvoiceData = async () => {
     // Fetch related data
     await Promise.all([
       fetchJobDetails(invoice?.value?.job_id || 0).then(data => jobDetails.value = data),
-      // fetchContractorDetails(invoice?.value?.by_id || 0).then(data => contractorDetails.value = data),
+      fetchContractorDetails(invoice?.value?.by_id || 0).then(data => contractorDetails.value = data),
       fetchProjectDetails(invoice?.value?.project_id || 0).then(data => projectDetails.value = data)
     ]);
     
@@ -210,19 +209,6 @@ const fetchInvoiceData = async () => {
 // Lifecycle hooks
 onMounted(() => {
   fetchInvoiceData();
-  contractorDetails.value = invoice?.value?.by_id || {
-    code: 0,
-    contact_person: '',
-    company_name: '',
-    phone_number: '',
-    email: '',
-    bsb: '',
-    account_no: '',
-    account_name: '',
-    address: '',
-    abn: '',
-    gst_registered: false
-  };    
 });
 </script>
 

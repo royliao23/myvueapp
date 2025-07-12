@@ -849,6 +849,7 @@ export default {
           console.error(`Invoice record not found for ID: ${invoice.code}`);
           return;
         }
+        
         handleViewInvoice(invoice);
       } catch (error) {
         console.error("Error fetching invoice details:", error);

@@ -19,8 +19,13 @@ export function useNavigationService() {
     selectedPurchase.value = purchase; // store selected purchase
     console.log('Selected purchase set:', selectedPurchase.value);
   };
-  const handleViewInvoice = (invoice: Invoice) => {
+  const handleViewInvoice = (invoice: any) => {
     try {
+      if (invoice?.by_id && typeof invoice.by_id !== "number" && typeof invoice.by_id !== "string") {
+          console.log("Invoice whose by_id is an object, converting to code", invoice);
+          invoice.by_id = invoice.by_id.code;
+          console.log("Converted by_id to code", invoice);
+        }
       selectedInvoice.value = invoice; // store selected invoice
       console.log('Selected invoice set:', selectedInvoice.value);
       console.log('Navigating to InvoiceView with code:', invoice.code);
