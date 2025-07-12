@@ -106,8 +106,8 @@ const currentPageComponent = computed<PageComponent>(() => {
       return defineAsyncComponent(() => import('./pages/Invoice.vue'));
     case 'InvoiceView':
       return defineAsyncComponent(() => import('./pages/InvoiceView.vue'));
-    // case 'PayComp': // Renamed to avoid conflict with 'Pay' folder
-    //   return defineAsyncComponent(() => import('./pages/Pay.vue'));
+    case 'PayComp': // Renamed to avoid conflict with 'Pay' folder
+      return defineAsyncComponent(() => import('./pages/Pay.vue'));
     // case 'PayView':
     //   return defineAsyncComponent(() => import('./pages/PayView.vue'));
     // case 'AgingReport':
