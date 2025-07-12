@@ -97,7 +97,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { fetchJobDetails, fetchContractorDetails, fetchProjectDetails } from '../services/DetailService'; // Assuming these services are framework-agnostic JS functions
+import { fetchJobDetails, fetchContractorDetails, fetchProjectDetails, fetchInvoiceDetails } from '../services/DetailService'; // Assuming these services are framework-agnostic JS functions
 import type { Invoice, Job, Project, Contractor } from '../models';
 import { useSelectedInvoice } from '../composables/useGlobalState';
 import { useCurrentPage } from '../composables/useGlobalState';
@@ -112,11 +112,8 @@ const goBack = () => {
 };
 const selectedInvoice = useSelectedInvoice();
 
-const invoice = computed(() => selectedInvoice.value);
+let invoice = computed(() => selectedInvoice.value);
 
-if (!invoice.value) {
-  console.warn('No selected invoice found!');
-}
 // State
 const safeInvoice = computed(() => invoice.value || {
   code: 0,
@@ -189,9 +186,24 @@ const handlePrint = () => {
 // Fetch data
 const fetchInvoiceData = async () => {
   try {
+    
+    // Fetch related data
+    await Promise.all([
+      fetchJobDetails(invoice?.value?.job_id || 0).then(data => jobDetails.value = data),
+      fetchContractorDetails(invoice?.value?.by_id || 0).then(data => contractorDetails.value = data),
+      fetchProjectDetails(invoice?.value?.project_id || 0).then(data => projectDetails.value = data)
+    ]);
+    
+    // Calculate paid amount
+    safeInvoice.value.paid = invoice?.value?.pay?.reduce((sum, payment) => sum + parseFloat(payment.amount.toString()), 0) || 0;
+  } catch (error) {
+    console.error("Error fetching invoice data:", error);
+  }
+};
+const fetchInvoiceDataDeep = async () => {
+  try {
     // In a real app, you would fetch the invoice data based on props.code
     // For now, we'll use the passed invoice data
-    
     // Fetch related data
     await Promise.all([
       fetchJobDetails(invoice?.value?.job_id || 0).then(data => jobDetails.value = data),
@@ -208,7 +220,18 @@ const fetchInvoiceData = async () => {
 
 // Lifecycle hooks
 onMounted(() => {
-  fetchInvoiceData();
+  if (!invoice.value?.by_id) {
+    console.warn('No invoice data available, fetching default data...');
+    fetchInvoiceDetails(invoice.value?.code || 0)
+      .then(data => {
+        invoice = computed(() => data);
+        console.log("Fetched Invoice Data::::::::::::::::::", invoice);
+      }).then(fetchInvoiceDataDeep)
+      .catch(error => console.error('Error fetching invoice details:', error));
+  } 
+  else {
+    fetchInvoiceData();
+  }
 });
 </script>
 

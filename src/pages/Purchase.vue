@@ -434,6 +434,20 @@ const handleDelete = async (code: number) => {
     }
   }
 };
+const { handleViewInvoice } = useNavigationService();
+const handleViewInv = async (invoice:any) => {
+  try {
+    if (!invoice) {
+      console.error(`Invoice record not found for ID: ${invoice.code}`);
+      return;
+    }
+    
+    handleViewInvoice(invoice);
+  } catch (error) {
+    console.error("Error fetching invoice details:", error);
+  }
+};
+
 
 // --- Invoice Creation ---
 const handleCreateInvoice = async (balance: number) => {
@@ -445,6 +459,7 @@ const handleCreateInvoice = async (balance: number) => {
     alert("Invoice amount cannot exceed the balance amount.");
     return;
   }
+  
 
   const invoicePayload = {
     po_id: editingCode.value,
@@ -475,6 +490,7 @@ const handleCreateInvoice = async (balance: number) => {
     alert(`Error creating invoice: ${error}`);
   }
 };
+
 </script>
 
 <template>
@@ -508,7 +524,7 @@ const handleCreateInvoice = async (balance: number) => {
         <strong>Job:</strong> {{ jobOptions.find((option) => option.value === purchase.job_id)?.label || "Unknown" }} <br />
         <strong>Invoices:</strong>
         <span v-for="(inv, index) in purchase.invoice" :key="index"
-              class="invoice-list-item text-blue-500"
+              class="invoice-list-item text-blue-500" @click="handleViewInv(inv)"
               >
           Inv#{{ inv.code }}: ${{ inv.cost || 0 }}
         </span>
@@ -550,7 +566,7 @@ const handleCreateInvoice = async (balance: number) => {
           <td class="td text-blue-500">
             <span v-for="(inv, index) in purchase.invoice" :key="index"
                   class="invoice-list-item"
-                  >
+                  @click="handleViewInv(inv)">
               Inv#{{ inv.code }}: ${{ inv.cost || 0 }}
             </span>
           </td>
