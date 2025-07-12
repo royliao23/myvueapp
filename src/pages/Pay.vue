@@ -296,12 +296,13 @@ const removePay = async (code: number) => {
     console.error('Error deleting pay:', error)
   }
 }
-
+const { handleViewInvoice, handleViewPay } = useNavigationService();
 const viewPay = (pay: Pay) => {
   // Implement navigation to pay view
   console.log('View pay:', pay)
+  handleViewPay(pay);
 }
-const { handleViewInvoice } = useNavigationService();
+
 const viewInvoice = async (pay:any) => {
     try {
     if (!pay) {
