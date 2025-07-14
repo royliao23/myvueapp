@@ -234,10 +234,10 @@ const handleEmail = async () => {
     };
 
     await emailjs.send(
-      emailJsServiceId as string,
-      emailJsTemplateId as string,
+      import.meta.env.VITE_SERVICE_ID,
+      import.meta.env.VITE_PTID,
       templateParams,
-      emailJsKey as string
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     );
     alert('Email sent successfully!');
   } catch (error) {
