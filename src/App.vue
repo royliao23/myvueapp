@@ -113,8 +113,8 @@ const currentPageComponent = computed<PageComponent>(() => {
     //   return defineAsyncComponent(() => import('./pages/AgingReport.vue'));
     // case 'BankReconciliation':
     //   return defineAsyncComponent(() => import('./pages/BankReconciliation.vue'));
-    // case 'PayrollDashboard':
-    //   return defineAsyncComponent(() => import('./pages/PayrollDashboard.vue'));
+    case 'PayrollDashboard':
+      return defineAsyncComponent(() => import('./pages/PayrollDashboard.vue'));
     case 'Company':
       return defineAsyncComponent(() => import('./pages/Company.vue'));
     case 'Employee':
