@@ -183,3 +183,17 @@ export interface InvoiceFilter {
   job_codes: number[];
   project_code: number | null;
 }
+
+export interface Department {
+  id: number
+  department_name: string
+  description?: string
+  manager?: string
+}
+
+export interface DeptFormData {
+  id?: number
+  department_name: string
+  description?: string
+  manager?: string
+}

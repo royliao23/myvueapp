@@ -125,9 +125,9 @@ const currentPageComponent = computed<PageComponent>(() => {
     //   return defineAsyncComponent(() => import('./pages/CategoryLedger.vue'));
     // case 'EasterEvent':
     //   return defineAsyncComponent(() => import('./pages/EasterEvent.vue'));
-    // case 'DepartmentComponent': // Renamed to avoid conflict with 'Department' folder
-    //   return defineAsyncComponent(() => import('./pages/Department.vue'));
-    // case 'BASReportPage':
+    case 'DepartmentComponent': // Renamed to avoid conflict with 'Department' folder
+      return defineAsyncComponent(() => import('./pages/Department.vue'));
+    case 'BASReportPage':
     //   return defineAsyncComponent(() => import('./pages/BASReportPage.vue'));
     case 'Budget':
       return defineAsyncComponent(() => import('./pages/Budget.vue'));
