@@ -216,9 +216,7 @@ const handlePrint = () => {
     setTimeout(() => printWindow.close(), 100);
   }, 200);
 };
-const emailJsKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const emailJsServiceId = import.meta.env.VITE_SERVICE_ID;
-const emailJsTemplateId = import.meta.env.VITE_OTID;
+
 const handleEmail = async () => {
   try {
     const templateParams = {

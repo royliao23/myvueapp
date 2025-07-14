@@ -132,15 +132,28 @@
               <v-row>
                 <v-col cols="12" md="6">
                   <v-select
-                    v-model="formData.department"
-                    :items="departments"
-                    item-text="department_name"
-                    item-value="id"
-                    label="Department"
-                    :rules="[requiredRule]"
-                    outlined
-                    
-                  ></v-select>
+                        v-model="formData.department"
+                        :items="departments"
+                        item-title="department_name"
+                        item-value="id"
+                        label="Department"
+                        :rules="[requiredRule]"
+                        outlined
+                        clearable
+                    >
+                        <!-- Custom item template with proper typing -->
+                        <template v-slot:item="{ item, props: vuetifyProps }">
+                        <v-list-item
+                            v-bind="vuetifyProps"
+                            :title="(item.raw as Department).department_name"
+                        ></v-list-item>
+                        </template>
+                        
+                        <!-- Custom selection template with proper typing -->
+                        <template v-slot:selection="{ item }">
+                        {{ (item.raw as Department).department_name }}
+                        </template>
+                    </v-select>
                   
                 </v-col>
                 <v-col cols="12" md="6">
@@ -328,6 +341,8 @@ interface Employee {
 interface Department {
   id: number
   department_name: string
+  description: string
+  manager: string
 }
 
 interface EmployeeFormData {
