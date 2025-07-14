@@ -129,8 +129,8 @@ const currentPageComponent = computed<PageComponent>(() => {
     //   return defineAsyncComponent(() => import('./pages/Department.vue'));
     // case 'BASReportPage':
     //   return defineAsyncComponent(() => import('./pages/BASReportPage.vue'));
-    // case 'Budget':
-    //   return defineAsyncComponent(() => import('./pages/Budget.vue'));
+    case 'Budget':
+      return defineAsyncComponent(() => import('./pages/Budget.vue'));
     default:
       // Fallback to Login if the route is not found or not logged in
       return defineAsyncComponent(() => import('./pages/Login.vue'));

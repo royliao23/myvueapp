@@ -16,7 +16,7 @@
       </v-row>
 
       <!-- Pay Content -->
-      <v-card elevation="3" class="pa-8">
+      <v-card elevation="3" class="pa-8 printable-content">
         <v-row justify="space-between" class="mb-6">
           <!-- Supplier Info -->
           <v-col cols="6">
@@ -79,27 +79,26 @@
             <p class="text-body-1">Please Assure the Highest Quality!</p>
           </v-col>
         </v-row>
-
-        <!-- Action Buttons -->
-        <v-row justify="center" class="mt-8 print-hide">
-          <v-col cols="auto">
-            <v-btn color="primary" @click="handlePrint">Print</v-btn>
-          </v-col>
-          <v-col cols="auto">
-            <v-btn color="primary" @click="handleEmail">Email</v-btn>
-          </v-col>
-          <v-col cols="auto">
-            <v-btn color="primary" @click="goBack">Back</v-btn>
-          </v-col>
-        </v-row>
       </v-card>
+
+      <!-- Action Buttons -->
+      <v-row justify="center" class="mt-8 no-print">
+        <v-col cols="auto">
+          <v-btn color="primary" @click="handlePrint">Print</v-btn>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn color="primary" @click="handleEmail">Email</v-btn>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn color="primary" @click="goBack">Back</v-btn>
+        </v-col>
+      </v-row>
     </v-card>
   </v-container>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-// import { useRoute, useRouter } from 'vue-router';
 import emailjs from '@emailjs/browser';
 import type { Pay, Contractor, Project, Job } from '../models';
 import {
@@ -107,10 +106,7 @@ import {
   fetchContractorDetails,
   fetchProjectDetails
 } from '../services/DetailService';
-import {  useSelectedPay, useCurrentPage } from '../composables/useGlobalState';
-// Router
-// const route = useRoute();
-// const router = useRouter();
+import { useSelectedPay, useCurrentPage } from '../composables/useGlobalState';
 
 // State
 const selectedPay = useSelectedPay();
@@ -163,29 +159,18 @@ const calculateGST = (amount: number) => {
 };
 
 const handlePrint = () => {
-  // Get the printable content with proper type assertion
-  const printContent = document.querySelector('.pay-view-container') as HTMLElement | null;
-  
+  const printContent = document.querySelector('.printable-content') as HTMLElement;
   if (!printContent) {
-    console.error("Could not find content to print");
+    console.error("Printable content not found");
     return;
   }
 
-  // Create a clone to avoid modifying the original DOM
-  const printClone = printContent.cloneNode(true) as HTMLElement;
-  
-  // Remove print buttons from the clone
-  const printHideElements = printClone.querySelectorAll('.print-hide');
-  printHideElements.forEach(el => el.remove());
-
-  // Create print window
   const printWindow = window.open('', '_blank', 'width=800,height=600');
   if (!printWindow) {
     alert("Please allow popups for printing");
     return;
   }
 
-  // Write complete HTML document
   printWindow.document.write(`
     <!DOCTYPE html>
     <html>
@@ -196,7 +181,6 @@ const handlePrint = () => {
             margin: 0; 
             padding: 15mm;
             font-family: Arial, sans-serif;
-            background: white;
           }
           table {
             width: 100%;
@@ -221,22 +205,17 @@ const handlePrint = () => {
         </style>
       </head>
       <body>
-        ${printClone.outerHTML}
+        ${printContent.outerHTML}
       </body>
     </html>
   `);
-
-  // Close the document stream
   printWindow.document.close();
-
-  // Print after slight delay to ensure content loads
+  
   setTimeout(() => {
     printWindow.print();
-    // Close after printing is done
     setTimeout(() => printWindow.close(), 100);
   }, 200);
 };
-
 const emailJsKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 const emailJsServiceId = import.meta.env.VITE_SERVICE_ID;
 const emailJsTemplateId = import.meta.env.VITE_OTID;
@@ -251,15 +230,15 @@ const handleEmail = async () => {
       gst: ((pay.value?.amount || 0) / 11).toFixed(2),
       description: `Job:${jobDetails.value.name}, ${jobDetails.value.description}. Your Ref:${pay.value?.jobby.ref}. Our ref:${pay.value?.code}`,
       project_name: projectDetails.value.project_name,
-      to_email: "yunzhi.liao@me.com" // contractorDetails.value.email,
+      to_email: "yunzhi.liao@me.com"
     };
+
     await emailjs.send(
       emailJsServiceId as string,
       emailJsTemplateId as string,
       templateParams,
       emailJsKey as string
     );
- 
     alert('Email sent successfully!');
   } catch (error) {
     console.error('Failed to send email:', error);
@@ -268,18 +247,18 @@ const handleEmail = async () => {
 };
 
 const goBack = () => {
-  currentPage.value = 'PayComp'; // Navigate back to PayComp
-
+  currentPage.value = 'PayComp';
 };
 
 // Fetch data
 const fetchData = async () => {
   try {
-
     await Promise.all([
       fetchJobDetails(pay.value?.jobby?.job_id || 0).then(data => jobDetails.value = data),
-      fetchContractorDetails(pay.value?.jobby?.by_id?.code || pay.value?.jobby?.by_id || 0).then(data => contractorDetails.value = data),
-      fetchProjectDetails(pay.value?.jobby?.project_id || 0).then(data => projectDetails.value = data)
+      fetchContractorDetails(pay.value?.jobby?.by_id?.code || pay.value?.jobby?.by_id || 0)
+        .then(data => contractorDetails.value = data),
+      fetchProjectDetails(pay.value?.jobby?.project_id || 0)
+        .then(data => projectDetails.value = data)
     ]);
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -322,9 +301,10 @@ onMounted(() => {
     padding: 0;
     margin: 0;
     background: white;
+    box-shadow: none;
   }
   
-  .print-hide {
+  .no-print {
     display: none !important;
   }
   
