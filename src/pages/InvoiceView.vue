@@ -178,11 +178,40 @@ const calculateGST = (amount: number) => {
 };
 
 const handlePrint = () => {
-  window.print();
+  const printContent = document.querySelector('.invoice-container') as HTMLElement | null;
+  if (!printContent) return;
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) return;
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Invoice #${invoice.value?.code || ''}</title>
+        <style>
+          body { margin: 0; padding: 10mm; font-family: Arial; }
+          .print-hide { display: none; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { border: 1px solid #ddd; padding: 8px; }
+          .text-right { text-align: right; }
+          @page { size: A4; margin: 10mm; }
+        </style>
+      </head>
+      <body>
+        ${printContent.outerHTML}
+      </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  
+  // Move print/close logic outside the HTML string
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 200);
 };
-
-
-
 // Fetch data
 const fetchInvoiceData = async () => {
   try {
@@ -242,13 +271,35 @@ onMounted(() => {
 }
 
 @media print {
-  .print-hide {
+  body.printing {
+    background: white !important;
+  }
+  
+  body.printing * {
+    visibility: hidden;
+  }
+  
+  body.printing .invoice-container,
+  body.printing .invoice-container * {
+    visibility: visible;
+  }
+  
+  body.printing .invoice-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  
+  body.printing .print-hide {
     display: none !important;
   }
   
-  .invoice-container {
-    padding: 0;
-    background-color: white;
+  @page {
+    size: A4;
+    margin: 10mm;
   }
 }
 </style>

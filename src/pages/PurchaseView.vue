@@ -91,7 +91,65 @@ const formatDate = (date: Date | undefined) => {
 
 // --- Handlers ---
 const handlePrint = () => {
-  window.print();
+  // Create a clone of the printable content
+  const printContent = document.querySelector('.invoice-paper')?.cloneNode(true) as HTMLElement;
+  
+  if (!printContent) return;
+
+  // Create a print window
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) return;
+
+  // Add styles to the print window
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Purchase Order #${purchase.value?.code || ''}</title>
+        <style>
+          body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+          .invoice-paper {
+            padding: 20mm;
+            width: 100%;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+          }
+          th, td {
+            border: 1px solid #e0e0e0;
+            padding: 8px 12px;
+            text-align: left;
+          }
+          th {
+            background-color: #f5f5f5;
+          }
+          .text-right {
+            text-align: right;
+          }
+          .summary-section, .terms-section {
+            margin-top: 32px;
+          }
+          .no-print {
+            display: none;
+          }
+          @page {
+            size: A4;
+            margin: 10mm;
+          }
+        </style>
+      </head>
+      <body>
+        ${printContent.outerHTML}
+      </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 200);
 };
 
 const handleEmail = async () => {
@@ -217,7 +275,7 @@ const totalCost = computed(() => purchase.value?.cost ? purchase.value.cost.toFi
         <p>Please Assure the Highest Quality!</p>
       </div>
 
-      <div class="print-hide-box">
+      <div class="print-hide-box no-print">
         <button class="button-contained" @click="handlePrint">Print</button>
         <button class="button-contained" @click="handleEmail">Email</button>
         <button class="button-contained" @click="handleBack">Back</button>
@@ -365,19 +423,28 @@ th {
 .button-contained:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12); /* Pressed state */
 }
-
-/* Print media query */
 @media print {
-  .print-hide-box {
-    display: none; /* Hide buttons when printing */
+  body * {
+    visibility: hidden;
+  }
+  .purchase-view-container,
+  .purchase-view-container * {
+    visibility: visible;
   }
   .purchase-view-container {
-    background-color: white; /* No background color when printing */
-    padding: 0; /* Adjust padding for print */
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: white;
   }
-  .invoice-paper {
-    box-shadow: none; /* No shadow when printing */
-    padding: 0; /* Adjust padding for print */
+  .print-hide-box {
+    display: none !important;
+    visibility: hidden !important;
   }
+
 }
+
 </style>
