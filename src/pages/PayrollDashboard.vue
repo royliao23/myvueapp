@@ -232,35 +232,33 @@
                 <p><strong>Pay Period:</strong> {{ selectedPayroll?.period }}</p>
                 <p class="text-h6 text-center primary--text">Don't worry, be happy!</p>
 
-                <v-simple-table class="mt-4">
-                  <template v-slot:default>
-                    <thead>
-                      <tr>
-                        <th>Description</th>
-                        <th>Gross Pay</th>
-                        <th>Net Pay to Bank</th>
-                        <th>Super</th>
-                        <th>PYAG withholding:</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>This Pay</td>
-                        <td>${{ Number(selectedPayroll?.gross_pay).toFixed(2) || "-" }}</td>
-                        <td>${{ Number(selectedPayroll?.net_pay).toFixed(2) || "-" }}</td>
-                        <td>${{ Number(selectedPayroll?.super).toFixed(2) || "-" }}</td>
-                        <td>${{ Number(selectedPayroll?.tax).toFixed(2) || "-" }}</td>
-                      </tr>
-                      <tr>
-                        <td>Ytd</td>
-                        <td>${{ Number(ytd.gross_total).toFixed(2) || "-" }}</td>
-                        <td>${{ Number(ytd.net_total).toFixed(2) || "-" }}</td>
-                        <td>${{ Number(ytd.super_total).toFixed(2) || "-" }}</td>
-                        <td>${{ Number(ytd.tax_total).toFixed(2) || "-" }}</td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
+                <v-table density="compact" class="mt-4">
+                  <thead>
+                    <tr>
+                      <th class="text-left" style="width: 20%">Description</th>
+                      <th class="text-right" style="width: 20%">Gross Pay</th>
+                      <th class="text-right" style="width: 20%">Net Pay to Bank</th>
+                      <th class="text-right" style="width: 20%">Super</th>
+                      <th class="text-right" style="width: 20%">PYAG withholding</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-left">This Pay</td>
+                      <td class="text-right">${{ Number(selectedPayroll?.gross_pay).toFixed(2) || "-" }}</td>
+                      <td class="text-right">${{ Number(selectedPayroll?.net_pay).toFixed(2) || "-" }}</td>
+                      <td class="text-right">${{ Number(selectedPayroll?.super).toFixed(2) || "-" }}</td>
+                      <td class="text-right">${{ Number(selectedPayroll?.tax).toFixed(2) || "-" }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-left">Ytd</td>
+                      <td class="text-right">${{ Number(ytd.gross_total).toFixed(2) || "-" }}</td>
+                      <td class="text-right">${{ Number(ytd.net_total).toFixed(2) || "-" }}</td>
+                      <td class="text-right">${{ Number(ytd.super_total).toFixed(2) || "-" }}</td>
+                      <td class="text-right">${{ Number(ytd.tax_total).toFixed(2) || "-" }}</td>
+                    </tr>
+                  </tbody>
+                </v-table>
 
                 <div class="text-right mt-4">
                   <p class="text-h6">Gross Pay: ${{ Number(selectedPayroll?.gross_pay).toFixed(2) || "-" }}</p>
@@ -420,10 +418,11 @@ async function fetchPayrolls() {
 
 async function fetchCompany() {
   try {
-    const data = await fcompany();
+    const data:any = await fcompany();
     if (!data) throw new Error("Company not found");
     
-    company.value = data || null;
+    company.value = data[0] || null;
+    console.log("Company data fetched successfully:", company.value);
   } catch (error) {
     console.error("Error fetching company:", error);
   }
