@@ -22,7 +22,7 @@
           <!-- Tab Content -->
           <v-tabs-items v-model="tabValue">
             <!-- Payroll Summary Tab -->
-            <v-tab-item>
+            <v-tab-item v-if="tabValue === 0">
               <v-card>
                 <v-card-title>
                   Payroll Summary
@@ -88,9 +88,9 @@
             </v-tab-item>
 
             <!-- Add Payroll Tab -->
-            <v-tab-item>
+            <v-tab-item v-if="tabValue === 1">
               <v-card class="mt-3">
-                <v-card-title class="text-h6 font-weight-bold">Add Payroll</v-card-title>
+                <v-card-title class="text-h6 font-weight-bold">Add Payrolls</v-card-title>
                 <v-card-text>
                   <v-row>
                     <v-col cols="12" sm="6">
