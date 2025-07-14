@@ -163,8 +163,80 @@ const calculateGST = (amount: number) => {
 };
 
 const handlePrint = () => {
-  window.print();
+  // Get the printable content with proper type assertion
+  const printContent = document.querySelector('.pay-view-container') as HTMLElement | null;
+  
+  if (!printContent) {
+    console.error("Could not find content to print");
+    return;
+  }
+
+  // Create a clone to avoid modifying the original DOM
+  const printClone = printContent.cloneNode(true) as HTMLElement;
+  
+  // Remove print buttons from the clone
+  const printHideElements = printClone.querySelectorAll('.print-hide');
+  printHideElements.forEach(el => el.remove());
+
+  // Create print window
+  const printWindow = window.open('', '_blank', 'width=800,height=600');
+  if (!printWindow) {
+    alert("Please allow popups for printing");
+    return;
+  }
+
+  // Write complete HTML document
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Remittance Advice #${pay.value?.code || ''}</title>
+        <style>
+          body { 
+            margin: 0; 
+            padding: 15mm;
+            font-family: Arial, sans-serif;
+            background: white;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            page-break-inside: avoid;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+          }
+          th {
+            background-color: #f5f5f5;
+          }
+          .text-right {
+            text-align: right;
+          }
+          @page {
+            size: A4;
+            margin: 10mm;
+          }
+        </style>
+      </head>
+      <body>
+        ${printClone.outerHTML}
+      </body>
+    </html>
+  `);
+
+  // Close the document stream
+  printWindow.document.close();
+
+  // Print after slight delay to ensure content loads
+  setTimeout(() => {
+    printWindow.print();
+    // Close after printing is done
+    setTimeout(() => printWindow.close(), 100);
+  }, 200);
 };
+
 
 const handleEmail = async () => {
   try {
@@ -226,13 +298,38 @@ onMounted(() => {
 }
 
 @media print {
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  body * {
+    visibility: hidden;
+  }
+  
+  .pay-view-container,
+  .pay-view-container * {
+    visibility: visible;
+  }
+  
+  .pay-view-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: white;
+  }
+  
   .print-hide {
     display: none !important;
   }
   
-  .pay-view-container {
-    padding: 0;
-    background-color: white;
+  @page {
+    size: A4;
+    margin: 10mm;
   }
 }
 </style>
