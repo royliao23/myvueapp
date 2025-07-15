@@ -119,7 +119,7 @@ const hrItems = ref<NavItem[]>([
 const reportItems = ref<NavItem[]>([
   { title: 'Creditor Aging', icon: 'mdi-calendar-clock', route: 'AgingReport' },
   { title: 'Bank Reconciliation', icon: 'mdi-bank-transfer', route: 'BankReconciliation' },
-  { title: 'BAS Report', icon: 'mdi-file-document', route: 'BASReportPage' },
+  { title: 'BAS Report', icon: 'mdi-file-document', route: 'BasReportPage' },
   { title: 'Ledger', icon: 'mdi-book-open', route: 'CategoryLedger' },
   { title: 'Chart Dashboard', icon: 'mdi-chart-bar', route: 'ChartDashboard' }
 ]);
