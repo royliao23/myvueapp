@@ -1,8 +1,6 @@
 // authFetch.ts
 import { getValidAccessToken } from './authService';
 
-const API_BASE_URL = import.meta.env.VITE_API_NODE
-
 export async function authFetch(input: RequestInfo, init: RequestInit = {}) {
   const token = await getValidAccessToken();
   if (!token) throw new Error("No valid auth token");

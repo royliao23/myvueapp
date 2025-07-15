@@ -121,7 +121,7 @@ const reportItems = ref<NavItem[]>([
   { title: 'Bank Reconciliation', icon: 'mdi-bank-transfer', route: 'BankReconciliation' },
   { title: 'BAS Report', icon: 'mdi-file-document', route: 'BasReportPage' },
   { title: 'Ledger', icon: 'mdi-book-open', route: 'CategoryLedger' },
-  { title: 'Chart Dashboard', icon: 'mdi-chart-bar', route: 'ChartDashboard' }
+  { title: 'Chart Dashboard', icon: 'mdi-chart-bar', route: 'ChartDashBoard' }
 ]);
 
 const handleItemClick = (item: NavItem) => {
