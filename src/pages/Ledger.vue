@@ -20,7 +20,7 @@
               </button>
               {{ proj.project_name }}
             </td>
-            <!-- <td class="td">${{ calculateProjectTotal(projectDetails[proj.code] || { categories: [] }).toFixed(2) }}</td> -->
+            <td class="td">${{ calculateProjectTotal(projectDetails[proj.code] || getDefaultProject()).toFixed(2) }}</td>
           </tr>
           <template v-if="expandedProjects[proj.code] && projectDetails[proj.code]">
             <template v-for="cat in projectDetails[proj.code]?.categories?.filter(cat => calculateCategoryTotal(cat) > 0)" :key="`${proj.code}-${cat.code}`">
@@ -113,6 +113,14 @@ export default defineComponent({
     const loading = ref(true);
     const error = ref<string | null>(null);
 
+    const getDefaultProject = (): Project => ({
+      code: 0,
+      project_name: '',
+      manager: '',
+      description: '',
+      status: '',
+      categories: []
+    });
     // Fetch all project codes on component mount
     const fetchProjects = async () => {
       try {
@@ -203,6 +211,7 @@ export default defineComponent({
       calculateJobTotal,
       calculateCategoryTotal,
       calculateProjectTotal,
+      getDefaultProject
     };
   },
 });
