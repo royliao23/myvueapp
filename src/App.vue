@@ -121,8 +121,8 @@ const currentPageComponent = computed<PageComponent>(() => {
       return defineAsyncComponent(() => import('./pages/Employee.vue'));
     // case 'ChartDashboard':
     //   return defineAsyncComponent(() => import('./pages/ChartDashboard.vue'));
-    // case 'CategoryLedger':
-    //   return defineAsyncComponent(() => import('./pages/CategoryLedger.vue'));
+    case 'CategoryLedger':
+      return defineAsyncComponent(() => import('./pages/Ledger.vue'));
     // case 'EasterEvent':
     //   return defineAsyncComponent(() => import('./pages/EasterEvent.vue'));
     case 'DepartmentComponent': // Renamed to avoid conflict with 'Department' folder
