@@ -94,9 +94,9 @@ const drawer = ref(false);
 const mainItems = ref<NavItem[]>([
   { title: 'Home', icon: 'mdi-home', route: 'Home' },
   { title: 'Purchase', icon: 'mdi-cart', route: 'PurchaseComp' },
-  { title: 'Task', icon: 'mdi-check-all', route: 'Task' },
-  { title: 'Contact', icon: 'mdi-account-box', route: 'Contact' },
-  { title: 'Articles', icon: 'mdi-newspaper', route: 'Articles' },
+  // { title: 'Task', icon: 'mdi-check-all', route: 'Task' },
+  // { title: 'Contact', icon: 'mdi-account-box', route: 'Contact' },
+  // { title: 'Articles', icon: 'mdi-newspaper', route: 'Articles' },
   { title: 'Category', icon: 'mdi-shape', route: 'Category' },
   { title: 'Job', icon: 'mdi-briefcase', route: 'JobComp' },
   { title: 'Project', icon: 'mdi-folder-multiple', route: 'ProjectComp' },
@@ -104,7 +104,7 @@ const mainItems = ref<NavItem[]>([
   { title: 'Invoice', icon: 'mdi-receipt', route: 'InvoiceComp' },
   { title: 'Pay', icon: 'mdi-cash-multiple', route: 'PayComp' },
   { title: 'Budget', icon: 'mdi-wallet', route: 'Budget' },
-  { title: 'Sample Purchase View', icon: 'mdi-eye', route: 'PurchaseView', param: '1' },
+  // { title: 'Sample Purchase View', icon: 'mdi-eye', route: 'PurchaseView', param: '1' },
 ]);
 
 // HR Submenu items
